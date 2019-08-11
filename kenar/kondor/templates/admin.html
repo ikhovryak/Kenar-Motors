@@ -1,0 +1,164 @@
+{% extends 'admin_skeleton.html' %}
+
+
+{% block title %}
+Адмінпанель
+{% endblock title %}
+
+
+{% block content %}
+
+  <table class="table table-hover table-sm table-bordered">
+    <thead class="thead-light text-center">
+      <tr>
+        <th scope="col">Дата</th>
+        <th scope="col">Ім"я</th>
+        <th scope="col">Телефон</th>
+        <!-- <th scope="col">Ел. адрес</th> -->
+        <!-- <th scope="col">VIN-код</th> -->
+        <!-- <th scope="col">Модель машини</th> -->
+        <th scope="col">Запчастини</th>
+        <th scope="col">Дод. коментарі</th>
+        <th scope="col">Коментар адміністратора</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if orders %}
+        {% for order in orders %}
+
+          <tr>
+            <th scope="row">
+              <a href="#order{{ order.id }}" data-toggle="modal">{{ order.date_posted.date() }}</a>
+            </th>
+            <td>{{ order.first_name }} {{ order.last_name }}</td>
+            <td>{{ order.phone }}</td>
+            <!-- <td>{{ order.email }}</td> -->
+            <!-- <td>{{ order.vin_code }}</td> -->
+            <!-- <td>{{ order.car_model }}</td> -->
+            <td>{{ order.car_parts }}</td>
+            <td>{{ order.user_comment }}</td>
+            <td>{{ order.admin_comment }}</td>
+            <td>
+              <div class="form-check">
+                <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="{{ order.is_completed }}" aria-label="...">
+              </div>
+            </td>
+          </tr>
+        {% endfor %}
+      {% endif %}
+    </tbody>
+  </table>
+
+
+
+    <!-- Button trigger modal -->
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+    Launch demo modal
+  </button>
+
+  <!-- Modal -->
+  {% for order in orders %}
+  <div class="modal fade" id="order{{ order.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Замовлення</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- <p><strong>Ім"я клієнта:</strong>{{ order.first_name }} {{ order.last_name }}</p>
+          <p><strong>Телефон клієнта:</strong></p>
+          <p>{{ order.phone }}</p>
+          <p><strong>Електронна пошта:</strong></p>
+          <p>{{ order.email }}</p>
+          <p><strong>VIN-код машини:</strong></p>
+          <p>{{ order.vin_code }}</p>
+          <p><strong>Марка та модель машини:</strong></p>
+          <p>{{ order.car_model }}</p>
+          <p><strong>Необхідні запчастини:</strong></p>
+          <p>{{ order.car_parts }}</p>
+          <p><strong>Коментарі клієнта:</strong></p>
+          <p>{{ order.user_comment }}</p>
+          <p><strong>Коментарі адміністратора:</strong></p>
+          <p>{{ order.admin_comment }}</p> -->
+
+
+
+
+          <div class="">
+            <table class="table table-sm ">
+              <tbody>
+                {% if order.is_completed %}
+                <tr class="table-success">
+                  <th scope="row" style="width: 25%">Статус:</th>
+                  <td  style="width: 25%">Виконане</td>
+                  <th scope="row"  style="width: 25%">Дата замовлення:</th>
+                  <td  style="width: 25%">{{ order.date_posted.date() }}</td>
+                </tr>
+                {% else %}
+                <tr class="table-warning">
+                  <th scope="row"  style="width: 25%">Статус замовлення:</th>
+                  <td  style="width: 25%">В процесі</td>
+                  <th scope="row"   style="width: 25%">Дата замовлення:</th>
+                  <td  style="width: 25%">{{ order.date_posted.date() }}</td>
+                </tr>
+                {% endif %}
+                <tr>
+                  <th scope="row">Ім"я клієнта:</th>
+                  <td>{{ order.first_name }} {{ order.last_name }}</td>
+                  <th scope="row">Телефон клієнта:</th>
+                  <td>{{ order.phone }}</td>
+                </tr>
+                <tr>
+                  <th scope="row">Електронна пошта:</th>
+                  <td>{{ order.email }}</td>
+                  <th scope="row">VIN-код машини:</th>
+                  <td>{{ order.vin_code }}</td>
+                </tr>
+                <tr>
+                  <th scope="row">Адрес клієнта:</th>
+                  <td>{{ order.address }}</td>
+                  <th scope="row">Марка машини:</th>
+                  <td>{{ order.car_model }}</td>
+                </tr>
+                </tbody>
+              </table>
+              <table class="table table-sm">
+                <tbody>
+                  <tr>
+                    <th scope="row"  style="width: 25%">Необхідні запчастини:</th>
+                    <td>{{ order.car_parts }}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row"  style="width: 25%">Коментарі клієнта:</th>
+                    <td>{{ order.user_comment }}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row"  style="width: 25%">Коментарі адміністратора:</th>
+                    <td>{{ order.admin_comment }}</td>
+                  </tr>
+
+              </tbody>
+            </table>
+          </div>
+
+
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-danger btn-sm" >Видалити замовлення</button>
+          <button type="button" class="btn btn-outline-primary btn-sm">Save changes</button>
+          <button type="button" class="btn btn-outline-secondary btn-sm" data-dismiss="modal">Закрити</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+
+
+
+
+{% endblock content %}
