@@ -1,5 +1,5 @@
-from flask import render_template, flash, redirect, url_for
-from kondor.forms import RegistrationForm, LoginForm, OrderForm
+from flask import render_template, flash, redirect, url_for, request
+from kondor.forms import RegistrationForm, LoginForm, OrderForm, OrderCommentUpdateForm
 from kondor.models import User, Order
 from kondor import app, db, bcrypt
 from flask_login import login_user, current_user, logout_user
@@ -39,7 +39,7 @@ def form_submit():
         flash('Заявка успішно відправлена! Очікуйте дзвінка протягом декількох годин')
     return redirect(url_for('main'))
 
-@app.route('/admin')
+@app.route('/admin', methods=['GET', 'POST'])
 def admin():
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
@@ -82,10 +82,26 @@ def login():
             flash('Login Unsuccessful. Please check email and password', 'danger')
     return render_template('login.html', title='Login', form=form)
 
+@app.route('/admin/<int:order_id>/update_comment', methods=['GET', 'POST'])
+def update_comment(order_id):
+    order = Order.query.get(order_id)
+    form = OrderCommentUpdateForm()
+    if form.validate_on_submit():
+        order.admin_comment = form.admin_comment.data
+        db.session.commit()
+        flash("Коментар оновлено!", "success")
+        return redirect(url_for('admin', order_id=order_id))
+    elif request.method=='GET':
+        form.admin_comment.data = order.admin_comment
+    return redirect(url_for('modal', order_id=order_id, form=form))
 
-@app.route('/orders')
-def orders():
-    return render_template("admin.html", orders=posts)
+
+@app.route('/admin#order<int:order_id>', methods=['GET', 'POST'])
+def modal(order_id):
+    orders = Order.query.all()
+    form = OrderCommentUpdateForm()
+    return render_template('admin.html', form=form, orders=orders)
+
 
 @app.route('/logout')
 def logout():

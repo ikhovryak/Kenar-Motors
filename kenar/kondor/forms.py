@@ -38,3 +38,7 @@ class OrderForm(FlaskForm):
     car_parts = TextAreaField("Запчастини, які Вас цікавлять", validators=[DataRequired()], description="Запчастини, які Вас цікавлять", render_kw={"rows": 70, "cols": 11})
     user_comment = TextAreaField("Додаткові коментарі", description="Додаткові коментарі", render_kw={"rows": 70, "cols": 11})
     submit = SubmitField("Відправити")
+
+class OrderCommentUpdateForm(FlaskForm):
+    admin_comment = TextAreaField("Коментар адміністратора", description="Додаткові коментарі")
+    submit = SubmitField("Зберегти")
