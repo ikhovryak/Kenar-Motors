@@ -90,18 +90,28 @@ def update_comment(order_id):
         order.admin_comment = form.admin_comment.data
         db.session.commit()
         flash("Коментар оновлено!", "success")
-        return redirect(url_for('admin', order_id=order_id))
+        return redirect(url_for('order', order_id=order_id))
     elif request.method=='GET':
         form.admin_comment.data = order.admin_comment
-    return redirect(url_for('modal', order_id=order_id, form=form))
+    return render_template('order.html', order_id=order_id, form=form, order=order)
 
 
-@app.route('/admin#order<int:order_id>', methods=['GET', 'POST'])
-def modal(order_id):
-    orders = Order.query.all()
-    form = OrderCommentUpdateForm()
-    return render_template('admin.html', form=form, orders=orders)
+@app.route('/admin/<int:order_id>', methods=['GET', 'POST'])
+def order(order_id):
+    order = Order.query.get(order_id)
+    return render_template('order.html', order=order)
 
+@app.route('/admin/<int:order_id>/delete', methods=['GET', 'POST'])
+def delete_order(order_id):
+    order = Order.query.get(order_id)
+    db.session.delete(order)
+    db.session.commit()
+    flash('Замовлення видалено!', 'success')
+    return redirect(url_for('admin'))
+
+@app.route('/admin/<int:order_id>/cancel', methods=['GET', 'POST'])
+def cancel_changes(order_id):
+    return redirect(url_for('order', order_id=order_id))
 
 @app.route('/logout')
 def logout():

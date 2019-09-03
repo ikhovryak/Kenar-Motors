@@ -1,0 +1,82 @@
+{% extends 'admin_skeleton.html' %}
+
+
+{% block title %}
+Замовлення
+{% endblock title %}
+
+
+{% block content %}
+<div class="col-md-9 mx-auto pt-4">
+  <h5 class="text-center">Замовлення</h5>
+    <table class="table table-sm ">
+      <tbody>
+        {% if order.is_completed %}
+        <tr class="table-success">
+          <th scope="row" style="width: 25%">Статус:</th>
+          <td  style="width: 25%">Виконане</td>
+          <th scope="row"  style="width: 25%">Дата замовлення:</th>
+          <td  style="width: 25%">{{ order.date_posted.date() }}</td>
+        </tr>
+        {% else %}
+        <tr class="table-warning">
+          <th scope="row"  style="width: 25%">Статус замовлення:</th>
+          <td  style="width: 25%">В процесі</td>
+          <th scope="row"   style="width: 25%">Дата замовлення:</th>
+          <td  style="width: 25%">{{ order.date_posted.date() }}</td>
+        </tr>
+        {% endif %}
+        <tr>
+          <th scope="row">Ім"я клієнта:</th>
+          <td>{{ order.first_name }} {{ order.last_name }}</td>
+          <th scope="row">Телефон клієнта:</th>
+          <td>{{ order.phone }}</td>
+        </tr>
+        <tr>
+          <th scope="row">Електронна пошта:</th>
+          <td>{{ order.email }}</td>
+          <th scope="row">VIN-код машини:</th>
+          <td>{{ order.vin_code }}</td>
+        </tr>
+        <tr>
+          <th scope="row">Адрес клієнта:</th>
+          <td>{{ order.address }}</td>
+          <th scope="row">Марка машини:</th>
+          <td>{{ order.car_model }}</td>
+        </tr>
+        </tbody>
+      </table>
+      <table class="table table-sm">
+        <tbody>
+          <tr>
+            <th scope="row"  style="width: 25%">Необхідні запчастини:</th>
+            <td>{{ order.car_parts }}</td>
+          </tr>
+          <tr>
+            <th scope="row"  style="width: 25%">Коментарі клієнта:</th>
+            <td>{{ order.user_comment }}</td>
+          </tr>
+          <tr>
+            <th scope="row"  style="width: 25%">Коментарі адміністратора:</th>
+            <td>
+              <a href="{{ url_for('update_comment', order_id=order.id) }}" class="text-muted text-right"><p class="text-right"><small>Редагувати</small></p></a>
+                <form method="POST" action="">
+                  {{ form.hidden_tag() }}
+                  <fieldset class="form-group">
+                    <div class="form-group">
+                      {{ form.admin_comment(class="form-control form-control-lg") }}
+                    </div>
+                  </fieldset>
+                  <div class="form-group">
+                      {{ form.submit(class="btn btn-outline-primary") }}
+                  </div>
+                </form>
+
+            </td>
+          </tr>
+
+      </tbody>
+    </table>
+
+</div>
+{% endblock content %}

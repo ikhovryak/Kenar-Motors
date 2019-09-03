@@ -1,0 +1,122 @@
+{% extends 'admin_skeleton.html' %}
+
+
+{% block title %}
+Замовлення
+{% endblock title %}
+
+
+{% block content %}
+<div class="col-md-9 mx-auto pt-4 bg-light border rounded">
+  <h5 class="text-center">Замовлення</h5>
+    <table class="table table-sm ">
+      <tbody>
+        {% if order.is_completed %}
+        <tr class="table-success">
+          <th scope="row" style="width: 25%">Статус:</th>
+          <td  style="width: 25%">Виконане</td>
+          <th scope="row"  style="width: 25%">Дата замовлення:</th>
+          <td  style="width: 25%">{{ order.date_posted.date() }}</td>
+        </tr>
+        {% else %}
+        <tr class="table-warning">
+          <th scope="row"  style="width: 25%">Статус замовлення:</th>
+          <td  style="width: 25%">В процесі</td>
+          <th scope="row"   style="width: 25%">Дата замовлення:</th>
+          <td  style="width: 25%">{{ order.date_posted.date() }}</td>
+        </tr>
+        {% endif %}
+        <tr>
+          <th scope="row">Ім"я клієнта:</th>
+          <td>{{ order.first_name }} {{ order.last_name }}</td>
+          <th scope="row">Телефон клієнта:</th>
+          <td>{{ order.phone }}</td>
+        </tr>
+        <tr>
+          <th scope="row">Електронна пошта:</th>
+          <td>{{ order.email }}</td>
+          <th scope="row">VIN-код машини:</th>
+          <td>{{ order.vin_code }}</td>
+        </tr>
+        <tr>
+          <th scope="row">Адрес клієнта:</th>
+          <td>{{ order.address }}</td>
+          <th scope="row">Марка машини:</th>
+          <td>{{ order.car_model }}</td>
+        </tr>
+        </tbody>
+      </table>
+      <table class="table table-sm">
+        <tbody>
+          <tr>
+            <th scope="row"  style="width: 25%">Необхідні запчастини:</th>
+            <td>{{ order.car_parts }}</td>
+          </tr>
+          <tr>
+            <th scope="row"  style="width: 25%">Коментарі клієнта:</th>
+            <td>{{ order.user_comment }}</td>
+          </tr>
+          <tr>
+            <th scope="row"  style="width: 25%">Коментарі адміністратора:</th>
+            <td>
+              {% if form %}
+                <form method="POST" action="">
+                  {{ form.hidden_tag() }}
+                  <div class="form-group">
+                    <div class="form-group">
+                      {{ form.admin_comment(class="form-control form-control-lg textfield") }}
+                    </div>
+                  </div>
+                  <div class="form-group float-right">
+                      {{ form.submit(class="btn btn-sm btn-outline-success") }}
+                      <a href="{{ url_for('cancel_changes', order_id=order.id) }}" role="button" class="btn btn-outline-secondary btn-sm">Скасувати зміни</a>
+                  </div>
+
+                </form>
+              {% else %}
+                {{ order.admin_comment }}
+                <a href="{{ url_for('update_comment', order_id=order.id) }}" class="text-primary text-right"><p class="text-right"><small>Редагувати</small></p></a>
+
+              {% endif %}
+            </td>
+          </tr>
+          <tr>
+            <th>
+            </th>
+            <td class="float-right">
+              <a role="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal">Видалити</a>
+              <a role="button" href="{{ url_for('admin')}}" class="btn btn-outline-secondary btn-sm ">Повернутись назад</a>
+            </td>
+          </tr>
+
+
+      </tbody>
+
+    </table>
+
+
+
+
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">Delete Post?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <form action="{{ url_for('delete_order', order_id=order.id) }}" method="POST">
+          <input class="btn btn-danger" type="submit" value="Delete">
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

@@ -6,7 +6,7 @@
 
 body {
   overflow-x: hidden;
-    
+
   font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 }
 
@@ -829,6 +829,9 @@ transition: all 300ms ease;
   font-size: 0.8rem;
 }
 
+.textfield{
+  font-size: 0.8rem;
+}
 td {
   white-space: normal !important;
   word-wrap: break-word;
