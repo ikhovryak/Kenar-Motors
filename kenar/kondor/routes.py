@@ -3,6 +3,7 @@ from kondor.forms import RegistrationForm, LoginForm, OrderForm, OrderCommentUpd
 from kondor.models import User, Order
 from kondor import app, db, bcrypt
 from flask_login import login_user, current_user, logout_user
+from sqlalchemy import desc
 
 posts = [
     {
@@ -44,7 +45,7 @@ def admin():
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
     else:
-        orders = Order.query.all()
+        orders = Order.query.order_by(desc(Order.date_posted)).all()
         return render_template("admin.html", orders=orders)
 
 @app.route('/admin_profile')
@@ -99,6 +100,8 @@ def update_comment(order_id):
 @app.route('/admin/<int:order_id>', methods=['GET', 'POST'])
 def order(order_id):
     order = Order.query.get(order_id)
+    order.is_read = True
+    db.session.commit()
     return render_template('order.html', order=order)
 
 @app.route('/admin/<int:order_id>/delete', methods=['GET', 'POST'])
@@ -109,8 +112,18 @@ def delete_order(order_id):
     flash('Замовлення видалено!', 'success')
     return redirect(url_for('admin'))
 
-@app.route('/admin/<int:order_id>/cancel', methods=['GET', 'POST'])
-def cancel_changes(order_id):
+@app.route('/admin/<int:order_id>/mark_undone')
+def mark_undone(order_id):
+    order = Order.query.get(order_id)
+    order.is_completed = False
+    db.session.commit()
+    return redirect(url_for('order', order_id=order_id))
+
+@app.route('/admin/<int:order_id>/mark_done')
+def mark_done(order_id):
+    order = Order.query.get(order_id)
+    order.is_completed = True
+    db.session.commit()
     return redirect(url_for('order', order_id=order_id))
 
 @app.route('/logout')

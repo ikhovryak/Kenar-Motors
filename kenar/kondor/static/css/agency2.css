@@ -845,3 +845,7 @@ table {
  position: relative;
  min-height: 100%;
 }
+
+.order-done{
+  background-color: #f2f2f2;
+}

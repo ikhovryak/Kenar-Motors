@@ -30,6 +30,7 @@ class Order(db.Model):
     admin_comment = db.Column(db.Text, default="")
     date_posted = db.Column(db.DateTime, default=datetime.utcnow(), nullable=False)
     is_completed = db.Column(db.Boolean, default=False)
+    is_read = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
         return f"Order('{self.first_name}', '{self.last_name}', '{self.phone}')"

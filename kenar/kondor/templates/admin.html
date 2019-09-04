@@ -9,41 +9,74 @@
 {% block content %}
 
   <table class="table table-hover table-sm table-bordered">
-    <thead class="thead-light text-center">
-      <tr>
-        <th scope="col">Дата</th>
-        <th scope="col">Ім"я</th>
-        <th scope="col">Телефон</th>
-        <!-- <th scope="col">Ел. адрес</th> -->
-        <!-- <th scope="col">VIN-код</th> -->
-        <!-- <th scope="col">Модель машини</th> -->
-        <th scope="col">Запчастини</th>
-        <th scope="col">Дод. коментарі</th>
-        <th scope="col">Коментар адміністратора</th>
-        <th scope="col"></th>
+    <thead class="table-primary text-center">
+      <tr >
+        <th style="width:8%" >Дата</th>
+        <th style="width:13%" >Ім"я</th>
+        <th style="width:9%" >Телефон</th>
+        <th style="width:20%" >Запчастини</th>
+        <th style="width:20%" >Дод. коментарі</th>
+        <th style="width:15%" >Коментар адмін.</th>
+        <th style="width:2%" ></th>
       </tr>
     </thead>
     <tbody>
       {% if orders %}
         {% for order in orders %}
+          {% if order.is_completed %}
+            <tr class="text-muted order-done">
+              <td>
+                <!-- Look up stretched link -->
+                <a href="{{ url_for('order', order_id=order.id) }}">{{ order.date_posted.date() }}</a>
+              </td>
+              <td>{{ order.first_name }} {{ order.last_name }}</td>
+              <td>{{ order.phone }}</td>
+              <td><div class="text-truncate">{{ order.car_parts }}</div></td>
+              <td><div class="text-truncate">{{ order.user_comment }}</div></td>
+              <td><div class="text-truncate">{{ order.admin_comment }}</div></td>
+              <td>
+                <div class="form-check">
+                  <input class="form-check-input position-static" checked="{{ order.is_completed }}" type="checkbox" id="blankCheckbox" value="{{ order.is_completed }}" aria-label="...">
+                </div>
+              </td>
+            </tr>
+          {% elif order.is_read %}
+            <tr>
+              <th scope="row">
+                <a href="{{ url_for('order', order_id=order.id) }}">{{ order.date_posted.date() }}</a>
+              </th>
+              <td><div class="text-truncate">{{ order.first_name }} {{ order.last_name }}</div></td>
+              <td><div class="text-truncate">{{ order.phone }}</div></td>
+              <td><div class="text-truncate">{{ order.car_parts }}</div></td>
+              <td><div class="text-truncate">{{ order.user_comment }}</div></td>
+              <td><div class="text-truncate">{{ order.admin_comment }}</div></td>
+              <td>
+                <div class="form-check">
+                  <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="{{ order.is_completed }}" aria-label="...">
+                </div>
+              </td>
+            </tr>
+          {% else %}
+            <tr class="font-weight-bold">
+              <th scope="row">
+                <a href="{{ url_for('order', order_id=order.id) }}">{{ order.date_posted.date() }}</a>
+              </th>
+              <td><div class="text-truncate">{{ order.first_name }} {{ order.last_name }}</div></td>
+              <td><div class="text-truncate">{{ order.phone }}</div></td>
+              <td><div class="text-truncate">{{ order.car_parts }}</div></td>
+              <td><div class="text-truncate">{{ order.user_comment }}</div></td>
+              <td><div class="text-truncate">{{ order.admin_comment }}</div></td>
+              <td>
+                <div class="form-check">
+                  <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="{{ order.is_completed }}" aria-label="...">
+                </div>
+              </td>
+            </tr>
+          {% endif %}
 
-          <tr>
-            <th scope="row">
-              <a href="{{ url_for('order', order_id=order.id) }}">{{ order.date_posted.date() }}</a>
-            </th>
-            <td>{{ order.first_name }} {{ order.last_name }}</td>
-            <td>{{ order.phone }}</td>
-            <td>{{ order.car_parts }}</td>
-            <td>{{ order.user_comment }}</td>
-            <td>{{ order.admin_comment }}</td>
-            <td>
-              <div class="form-check">
-                <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="{{ order.is_completed }}" aria-label="...">
-              </div>
-            </td>
-          </tr>
-        {% endfor %}
-      {% endif %}
+
+      {% endfor %}
+    {% endif %}
     </tbody>
   </table>
 
@@ -75,7 +108,7 @@
   </div>
 
   <!-- Modal -->
-  {% for order in orders %}
+  <!-- {% for order in orders %}
   <div class="modal fade" id="order{{ order.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog modal-lg" role="document">
       <div class="modal-content">
@@ -182,7 +215,7 @@
   </div>
 
 
-  {% endfor %}
+  {% endfor %} -->
 
 
 

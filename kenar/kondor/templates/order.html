@@ -57,7 +57,7 @@
             <td>{{ order.user_comment }}</td>
           </tr>
           <tr>
-            <th scope="row"  style="width: 25%">Коментарі адміністратора:</th>
+            <th scope="row"  style="width: 25%">Коментарі адмін.:</th>
             <td>
               {% if form %}
                 <form method="POST" action="">
@@ -69,23 +69,30 @@
                   </div>
                   <div class="form-group float-right">
                       {{ form.submit(class="btn btn-sm btn-outline-success") }}
-                      <a href="{{ url_for('cancel_changes', order_id=order.id) }}" role="button" class="btn btn-outline-secondary btn-sm">Скасувати зміни</a>
+                      <a href="{{ url_for('order', order_id=order.id) }}" role="button" class="btn btn-outline-secondary btn-sm">Скасувати зміни</a>
                   </div>
 
                 </form>
               {% else %}
                 {{ order.admin_comment }}
-                <a href="{{ url_for('update_comment', order_id=order.id) }}" class="text-primary text-right"><p class="text-right"><small>Редагувати</small></p></a>
+                <a href="{{ url_for('update_comment', order_id=order.id) }}" class="text-primary float-right"><small class="text-right">Редагувати</small></a>
 
               {% endif %}
             </td>
           </tr>
-          <tr>
+          <tr class="table-default">
             <th>
             </th>
-            <td class="float-right">
-              <a role="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal">Видалити</a>
+            <td class="float-right ">
               <a role="button" href="{{ url_for('admin')}}" class="btn btn-outline-secondary btn-sm ">Повернутись назад</a>
+              {% if order.is_completed %}
+              <a role="button" href="{{ url_for('mark_undone', order_id=order.id)}}" class="btn btn-outline-warning btn-sm ">Позначити як невиконане</a>
+              {% endif %}
+              {% if not order.is_completed %}
+              <a role="button" href="{{ url_for('mark_done', order_id=order.id)}}" class="btn btn-outline-success btn-sm ">Позначити як виконане</a>
+              {% endif %}
+              <a role="button" href="#" class="btn btn-outline-danger btn-sm" data-toggle="modal" data-target="#deleteModal">Видалити</a>
+
             </td>
           </tr>
 
