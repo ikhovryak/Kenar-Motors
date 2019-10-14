@@ -5,6 +5,21 @@
 Адмінпанель
 {% endblock title %}
 
+{% block flashing %}
+<div class="row">
+  <div class="col mx-auto text-center">
+    {% with messages=get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+  </div>
+</div>
+{% endblock flashing %}
 
 {% block content %}
 
@@ -24,48 +39,52 @@
       {% if orders %}
         {% for order in orders %}
           {% if order.is_completed %}
+
             <tr class="text-muted order-done">
-              <td>
+              <td class="position-relative">
                 <!-- Look up stretched link -->
-                <a href="{{ url_for('order', order_id=order.id) }}">{{ order.date_posted.date() }}</a>
+                <a class="stretched-link" href="{{ url_for('order', order_id=order.id) }}">{{ order.date_posted.date() }}</a>
               </td>
-              <td>{{ order.first_name }} {{ order.last_name }}</td>
-              <td>{{ order.phone }}</td>
-              <td><div class="text-truncate">{{ order.car_parts }}</div></td>
-              <td><div class="text-truncate">{{ order.user_comment }}</div></td>
-              <td><div class="text-truncate">{{ order.admin_comment }}</div></td>
-              <td>
+              <td class="position-relative">{{ order.first_name }} {{ order.last_name }} <a class="stretched-link" href="{{ url_for('order', order_id=order.id) }}"></a></td>
+              <td class="position-relative">{{ order.phone }} <a class="stretched-link" href="{{ url_for('order', order_id=order.id) }}"></a></td>
+              <td class="position-relative"><div class="text-truncate">{{ order.car_parts }}<a class="stretched-link" href="{{ url_for('order', order_id=order.id) }}"></a></div></td>
+              <td class="position-relative"><div class="text-truncate">{{ order.user_comment }}<a class="stretched-link" href="{{ url_for('order', order_id=order.id) }}"></a></div></td>
+              <td class="position-relative"><div class="text-truncate">{{ order.admin_comment }}<a class="stretched-link" href="{{ url_for('order', order_id=order.id) }}"></a></div></td>
+              <td class="position-relative">
                 <div class="form-check">
                   <input class="form-check-input position-static" checked="{{ order.is_completed }}" type="checkbox" id="blankCheckbox" value="{{ order.is_completed }}" aria-label="...">
                 </div>
               </td>
             </tr>
+
           {% elif order.is_read %}
             <tr>
-              <th scope="row">
+              <th class="position-relative" scope="row">
                 <a href="{{ url_for('order', order_id=order.id) }}">{{ order.date_posted.date() }}</a>
               </th>
-              <td><div class="text-truncate">{{ order.first_name }} {{ order.last_name }}</div></td>
-              <td><div class="text-truncate">{{ order.phone }}</div></td>
-              <td><div class="text-truncate">{{ order.car_parts }}</div></td>
-              <td><div class="text-truncate">{{ order.user_comment }}</div></td>
-              <td><div class="text-truncate">{{ order.admin_comment }}</div></td>
+              <td><div class="position-relative text-truncate">{{ order.first_name }} {{ order.last_name }}<a class="stretched-link" href="{{ url_for('order', order_id=order.id) }}"></a></div></td>
+              <td><div class="position-relative text-truncate">{{ order.phone }}<a class="stretched-link" href="{{ url_for('order', order_id=order.id) }}"></a></div></td>
+              <td><div class="position-relative text-truncate">{{ order.car_parts }}<a class="stretched-link" href="{{ url_for('order', order_id=order.id) }}"></a></div></td>
+              <td><div class="position-relative text-truncate">{{ order.user_comment }}<a class="stretched-link" href="{{ url_for('order', order_id=order.id) }}"></a></div></td>
+              <td><div class="position-relative text-truncate">{{ order.admin_comment }}<a class="stretched-link" href="{{ url_for('order', order_id=order.id) }}"></a></div></td>
               <td>
+                <form action="">
                 <div class="form-check">
-                  <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="{{ order.is_completed }}" aria-label="...">
+                  <input class="form-check-input position-static" type="checkbox" name="isCompletedCheckox" value="{{ order.is_completed }}" aria-label="...">
                 </div>
+                </form>
               </td>
             </tr>
           {% else %}
             <tr class="font-weight-bold">
-              <th scope="row">
+              <th class="position-relative" scope="row">
                 <a href="{{ url_for('order', order_id=order.id) }}">{{ order.date_posted.date() }}</a>
               </th>
-              <td><div class="text-truncate">{{ order.first_name }} {{ order.last_name }}</div></td>
-              <td><div class="text-truncate">{{ order.phone }}</div></td>
-              <td><div class="text-truncate">{{ order.car_parts }}</div></td>
-              <td><div class="text-truncate">{{ order.user_comment }}</div></td>
-              <td><div class="text-truncate">{{ order.admin_comment }}</div></td>
+              <td><div class="position-relative text-truncate">{{ order.first_name }} {{ order.last_name }}<a class="stretched-link" href="{{ url_for('order', order_id=order.id) }}"></a></div></td>
+              <td><div class="position-relative text-truncate">{{ order.phone }}<a class="stretched-link" href="{{ url_for('order', order_id=order.id) }}"></a></div></td>
+              <td><div class="position-relative text-truncate">{{ order.car_parts }}<a class="stretched-link" href="{{ url_for('order', order_id=order.id) }}"></a></div></td>
+              <td><div class="position-relative text-truncate">{{ order.user_comment }}<a class="stretched-link" href="{{ url_for('order', order_id=order.id) }}"></a></div></td>
+              <td><div class="position-relative text-truncate">{{ order.admin_comment }}<a class="stretched-link" href="{{ url_for('order', order_id=order.id) }}"></a></div></td>
               <td>
                 <div class="form-check">
                   <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="{{ order.is_completed }}" aria-label="...">
@@ -79,13 +98,11 @@
     {% endif %}
     </tbody>
   </table>
-
-
-
-    <!-- Button trigger modal -->
-  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
     Launch demo modal
   </button>
+
   <!-- Modal -->
   <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -106,6 +123,7 @@
       </div>
     </div>
   </div>
+
 
   <!-- Modal -->
   <!-- {% for order in orders %}

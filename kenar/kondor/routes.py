@@ -46,6 +46,9 @@ def admin():
         return redirect(url_for('login'))
     else:
         orders = Order.query.order_by(desc(Order.date_posted)).all()
+        if request.method=="POST":
+            test = request.form.get('isCompletedCheckox')
+
         return render_template("admin.html", orders=orders)
 
 @app.route('/admin_profile')
@@ -116,6 +119,7 @@ def delete_order(order_id):
 def mark_undone(order_id):
     order = Order.query.get(order_id)
     order.is_completed = False
+    flash("Позначено як невиконане", "warning")
     db.session.commit()
     return redirect(url_for('order', order_id=order_id))
 
@@ -123,6 +127,7 @@ def mark_undone(order_id):
 def mark_done(order_id):
     order = Order.query.get(order_id)
     order.is_completed = True
+    flash("Позначено як виконане!", "success")
     db.session.commit()
     return redirect(url_for('order', order_id=order_id))
 
