@@ -28,9 +28,77 @@
 
 
 <div class="col-md-9 mx-auto">
-<div class="card">
+<div class="card ">
   <div class="card-header text-center font-weight-bold">Замовлення</div>
-  <div class="card-body">
+  {% if form %}
+  <div class="card-body pb-0 pt-1">
+
+    <form method="POST" action="">
+    {{ form.hidden_tag() }}
+        <div class="form-row">
+          <div class="form-group col-md-6">
+              {{ form.first_name.label(class="col-form-label-sm admin-label") }}
+              {{ form.first_name(class="form-control form-control-admin") }}
+          </div>
+          <div class="form-group col-md-6">
+              {{ form.last_name.label(class="col-form-label-sm admin-label") }}
+              {{ form.last_name(class="form-control form-control-admin") }}
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+              {{ form.phone.label(class="col-form-label-sm admin-label") }}
+              {{ form.phone(class="form-control form-control-admin") }}
+          </div>
+          <div class="form-group col-md-6">
+              {{ form.email.label(class="col-form-label-sm admin-label") }}
+              {{ form.email(class="form-control form-control-admin") }}
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group  col-md-6">
+              {{ form.vin_code.label(class="col-form-label-sm admin-label") }}
+              {{ form.vin_code(class="form-control form-control-admin") }}
+          </div>
+          <div class="form-group  col-md-6">
+              {{ form.address.label(class="col-form-label-sm admin-label") }}
+              {{ form.address(class="form-control form-control-admin") }}
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+              {{ form.car_model.label(class="col-form-label-sm admin-label") }}
+              {{ form.car_model(class="form-control form-control-admin") }}
+          </div>
+          <div class="form-group col-md-6">
+              {{ form.car_parts.label(class="col-form-label-sm admin-label") }}
+              {{ form.car_parts(class="form-control form-control-admin") }}
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+              {{ form.user_comment.label(class="col-form-label-sm admin-label") }}
+              {{ form.user_comment(class="form-control form-control-admin ") }}
+          </div>
+          <div class="form-group col-md-6">
+              {{ form.admin_comment.label(class="col-form-label-sm admin-label") }}
+              {{ form.admin_comment(class="form-control form-control-admin ") }}
+          </div>
+        </div>
+
+
+    </div>
+    <div class="card-footer text-right">
+      <a href="{{ url_for('order', order_id=order.id) }}" role="button" class="btn btn-outline-secondary btn-sm">Скасувати зміни</a>
+      {{ form.submit(class="btn btn-sm btn-outline-info") }}
+      </form>
+    </div>
+
+    </div>
+
+    {% else %}
+
+    <div class="card-body ">
     <table class="table table-sm ">
       <tbody>
         {% if order.is_completed %}
@@ -81,25 +149,8 @@
           <tr>
             <th scope="row"  style="width: 25%">Коментарі адмін.:</th>
             <td>
-              {% if form %}
-                <form method="POST" action="">
-                  {{ form.hidden_tag() }}
-                  <div class="form-group">
-                    <div class="form-group">
-                      {{ form.admin_comment(class="form-control form-control-lg textfield") }}
-                    </div>
-                  </div>
-                  <div class="form-group float-right">
-                      {{ form.submit(class="btn btn-sm btn-outline-success") }}
-                      <a href="{{ url_for('order', order_id=order.id) }}" role="button" class="btn btn-outline-secondary btn-sm">Скасувати зміни</a>
-                  </div>
-
-                </form>
-              {% else %}
                 {{ order.admin_comment }}
-                <a href="{{ url_for('update_comment', order_id=order.id) }}" class="text-primary float-right"><small class="text-right">Редагувати</small></a>
 
-              {% endif %}
             </td>
           </tr>
         </tbody>
@@ -125,6 +176,7 @@
           </tr>
           </div>
 
+{% endif %}
 
 
 

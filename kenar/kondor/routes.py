@@ -1,9 +1,9 @@
 from flask import render_template, flash, redirect, url_for, request
-from kondor.forms import RegistrationForm, LoginForm, OrderForm, OrderCommentUpdateForm
+from kondor.forms import RegistrationForm, LoginForm, OrderForm, OrderCommentUpdateForm, OrderUpdateForm
 from kondor.models import User, Order
 from kondor import app, db, bcrypt
 from flask_login import login_user, current_user, logout_user
-from sqlalchemy import desc
+from sqlalchemy import desc, asc
 
 posts = [
     {
@@ -99,13 +99,43 @@ def update_comment(order_id):
         form.admin_comment.data = order.admin_comment
     return render_template('order.html', order_id=order_id, form=form, order=order)
 
+@app.route('/admin/<int:order_id>/update_order', methods=['GET', 'POST'])
+def update_order(order_id):
+    order = Order.query.get(order_id)
+    form = OrderUpdateForm()
+    if form.validate_on_submit():
+        order.first_name = form.first_name.data
+        order.last_name = form.last_name.data
+        order.phone = form.phone.data
+        order.email = form.email.data
+        order.vin_code = form.vin_code.data
+        order.address = form.address.data
+        order.car_model = form.car_model.data
+        order.car_parts = form.car_parts.data
+        order.user_comment = form.user_comment.data
+        order.admin_comment = form.admin_comment.data
+        db.session.commit()
+        flash("Коментар оновлено!", "success")
+        return redirect(url_for('order', order_id=order_id))
+    elif request.method=='GET':
+        form.first_name.data = order.first_name
+        form.last_name.data = order.last_name
+        form.phone.data = order.phone
+        form.email.data = order.email
+        form.vin_code.data = order.vin_code
+        form.address.data = order.address
+        form.car_model.data = order.car_model
+        form.car_parts.data = order.car_parts
+        form.user_comment.data = order.user_comment
+        form.admin_comment.data = order.admin_comment
+    return render_template('order0.html', order_id=order_id, form=form, order=order)
 
 @app.route('/admin/<int:order_id>', methods=['GET', 'POST'])
 def order(order_id):
     order = Order.query.get(order_id)
     order.is_read = True
     db.session.commit()
-    return render_template('order.html', order=order)
+    return render_template('order0.html', order=order)
 
 @app.route('/admin/<int:order_id>/delete', methods=['GET', 'POST'])
 def delete_order(order_id):

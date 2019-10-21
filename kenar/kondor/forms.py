@@ -40,5 +40,18 @@ class OrderForm(FlaskForm):
     submit = SubmitField("Відправити")
 
 class OrderCommentUpdateForm(FlaskForm):
-    admin_comment = TextAreaField("Коментар адміністратора", description="Додаткові коментарі")
+    admin_comment = TextAreaField("Коментар адміністратора", description="Коментар адміністратора")
+    submit = SubmitField("Зберегти")
+
+class OrderUpdateForm(FlaskForm):
+    first_name = StringField("Ім'я", validators=[DataRequired(), Length(min=1, max=30)], description="Ім'я")
+    last_name = StringField("Прізвище", validators=[DataRequired(), Length(min=1, max=30)], description="Прізвище")
+    phone = StringField("Телефон", validators=[DataRequired(), Length(min=1, max=20)], description="Телефон")
+    email = EmailField("Електронна пошта", validators=[ Length(min=1, max=120), Email()], description="Електронна пошта")
+    vin_code = StringField("VIN-код машини", validators=[DataRequired(), Length(min=1, max=30)], description="VIN-код машини")
+    address = StringField("Адрес клієнта", validators=[DataRequired(), Length(min=0, max=50)], description="Адрес клієнта")
+    car_model = TextAreaField("Марка та модель машини", validators=[Length(min=1, max=200)], description="Марка та модель машини")
+    car_parts = TextAreaField("Запчастини, які Вас цікавлять", validators=[DataRequired()], description="Запчастини, які Вас цікавлять")
+    user_comment = TextAreaField("Додаткові коментарі", description="Додаткові коментарі")
+    admin_comment = TextAreaField("Коментар адміністратора", description="Коментар адміністратора")
     submit = SubmitField("Зберегти")
